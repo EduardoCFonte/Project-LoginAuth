@@ -10,5 +10,5 @@ class User(Base):
     name = Column(String)
     surname = Column(String)
     birthday = Column(DateTime)
-    CPF = Column(Integer)
+    CPF = Column(String)
     
