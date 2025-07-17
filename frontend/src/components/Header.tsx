@@ -3,7 +3,7 @@ import { LockClosedIcon } from '@heroicons/react/24/solid'
 import logoImobiliare from "../assets/logo_imobiliare.png"
 
 const Header: React.FC = () => (
-  <header className="w-full bg-blue-900 h-12 md:h-16 lg:h-20 flex justify-between items-center px-4">
+  <header className="w-full bg-blue-900 h-12 md:h-16 lg:h-20 flex justify-between items-center px-4 ">
     
     <div className='flex-1 flex justify-start'>
       <LockClosedIcon className= "h-8 md:h-12 lg:h-16 pl-6"/>
