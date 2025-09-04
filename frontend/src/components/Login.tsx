@@ -1,5 +1,6 @@
 import React from "react"
 import minhaImagemDeFundo from "../assets/FundoLogin.jpeg"
+import LoginCard from "./LoginCard";
 
 
 const Login : React.FC = () => (
@@ -7,9 +8,8 @@ const Login : React.FC = () => (
     style={{ backgroundImage: `url(${minhaImagemDeFundo})` }}
     className="h-screen bg-cover bg-center flex items-center justify-center"
     >
-        <div className = "bg-yellow-400 rounded-lg shadow-lg w-1/3 h-3/4">
-        
-
+        <div >
+        <LoginCard/>        
         </div>
     
     </main>
