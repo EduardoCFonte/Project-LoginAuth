@@ -1,4 +1,4 @@
 fastapi
 uvicorn
 sqlalchemy
-cpf-cnpf-validate
+pydantic[email]
