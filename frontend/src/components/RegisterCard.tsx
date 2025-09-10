@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link , useNavigate} from 'react-router-dom';
+import api from "../services/api"
 
 const logoImobiliare = 'https://placehold.co/300x80/ffffff/333333?text=IMOBILIARE';
 
 const RegisterCard: React.FC = () => {
+    const navigate = useNavigate(); 
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
@@ -21,7 +23,7 @@ const RegisterCard: React.FC = () => {
         state: '',
     });
 
-    // Função para atualizar o estado de forma genérica
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { id, value } = e.target;
         setFormData(prevState => ({
@@ -30,16 +32,28 @@ const RegisterCard: React.FC = () => {
         }));
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Lógica de validação (ex: verificar se as senhas coincidem)
+
         if (formData.password !== formData.confirmPassword) {
             alert('As senhas não coincidem!');
             return;
         }
-        // Lógica de envio dos dados para o backend aqui
-        console.log('Dados do formulário:', formData);
-        alert(`Conta para ${formData.firstName} a ser criada com sucesso! (Verifique o console para ver os dados)`);
+        try {
+            // 2. Preparar os dados para enviar (excluir confirmPassword)
+            const { confirmPassword, ...dataToSend } = formData;
+
+
+            const response = await api.post('/api/register', dataToSend);
+
+            alert(response.data.message); // O axios já formata a resposta para JSON
+            navigate('/login');
+
+        } catch (error) {
+            // O Axios ajuda a tratar erros de forma mais consistente
+            console.error('Erro de registo:', error);
+            alert('Não foi possível completar o registo. Verifique os dados e tente novamente.');
+        }
     };
 
     return (
@@ -52,7 +66,6 @@ const RegisterCard: React.FC = () => {
             <p className="text-center text-gray-500 mb-8">É rápido e fácil.</p>
 
             <form onSubmit={handleSubmit} className="space-y-6">
-                {/* --- Dados Pessoais --- */}
                 <fieldset className="space-y-5">
                     <legend className="text-lg font-semibold text-gray-800 border-b border-gray-200 w-full pb-2 mb-4">Dados Pessoais</legend>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -77,7 +90,6 @@ const RegisterCard: React.FC = () => {
                     </div>
                 </fieldset>
 
-                {/* --- Dados de Acesso --- */}
                 <fieldset className="space-y-5">
                     <legend className="text-lg font-semibold text-gray-800 border-b border-gray-200 w-full pb-2 mb-4">Dados de Acesso</legend>
                     <div>
@@ -96,7 +108,7 @@ const RegisterCard: React.FC = () => {
                     </div>
                 </fieldset>
 
-                {/* --- Endereço --- */}
+
                 <fieldset className="space-y-5">
                     <legend className="text-lg font-semibold text-gray-800 border-b border-gray-200 w-full pb-2 mb-4">Endereço</legend>
                     <div>
