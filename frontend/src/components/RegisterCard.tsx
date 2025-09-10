@@ -42,9 +42,8 @@ const RegisterCard: React.FC = () => {
         try {
             // 2. Preparar os dados para enviar (excluir confirmPassword)
             const { confirmPassword, ...dataToSend } = formData;
-
-
             const response = await api.post('/api/register', dataToSend);
+
 
             alert(response.data.message); // O axios já formata a resposta para JSON
             navigate('/login');
