@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 // --- Ícones (SVG embutido para não precisar de bibliotecas externas) ---
 
@@ -24,22 +25,18 @@ const LoginCard: React.FC = () => {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        // Lógica de login com email e senha aqui
         alert(`A tentar login com: \nEmail: ${email}\nSenha: ${password}`);
     };
     
     const handleGoogleLogin = () => {
-        // Lógica de login com o Google aqui
         alert('A iniciar login com o Google...');
     }
 
     return (
-        // Container principal - AGORA SEM FUNDO E SEM ALTURA DE ECRÃ
-        <div className="w-full flex items-center justify-center p-4">
+
             
             <div className="bg-white w-full max-w-md p-8 md:p-10 rounded-2xl shadow-xl">
                 
-                {/* Logo */}
                 <div className="flex justify-center mb-8">
                     <img src={logoImobiliare} alt="Logo da Imobiliare" className='h-12 md:h-16' />
                 </div>
@@ -48,8 +45,7 @@ const LoginCard: React.FC = () => {
                 <p className="text-center text-gray-500 mb-8">Faça login para continuar</p>
 
                 <form onSubmit={handleSubmit} className="space-y-5">
-                    
-                    {/* Input de Email */}
+                
                     <div>
                         <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
                             Email
@@ -65,7 +61,6 @@ const LoginCard: React.FC = () => {
                         />
                     </div>
                     
-                    {/* Input de Senha */}
                     <div>
                         <div className="flex justify-between items-center mb-1">
                             <label htmlFor="password" className="block text-sm font-medium text-gray-700">
@@ -85,7 +80,7 @@ const LoginCard: React.FC = () => {
                                 required
                                 className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-200"
                             />
-                            {/* Ícone para mostrar/ocultar senha */}
+
                             <button
                                 type="button"
                                 onClick={() => setShowPassword(!showPassword)}
@@ -130,16 +125,15 @@ const LoginCard: React.FC = () => {
                     Entrar com o Google
                 </button>
 
-                {/* Link de Cadastro */}
                 <p className="text-center text-sm text-gray-600 mt-8">
                     Não tem uma conta?{' '}
-                    <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500">
-                        Cadastre-se
-                    </a>
+                    <Link to = "/register" className="font-semibold text-indigo-600 hover:text-indigo-500">
+                    Cadastre-se
+                    </Link>
                 </p>
 
             </div>
-        </div>
+
     );
 };
 
