@@ -1,7 +1,7 @@
 import React from "react"
 import BackgroundImage from "../assets/FundoLogin.jpeg"
-import LoginCard from "../components/LoginCard"
-import Header from "../components/Header";
+import LoginCard from "../components/UI/LoginCard"
+import Header from "../components/Layout/Header";
 
 
 const LoginPage : React.FC = () => (
