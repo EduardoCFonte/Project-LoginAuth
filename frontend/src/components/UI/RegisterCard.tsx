@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { Link , useNavigate} from 'react-router-dom';
 import api from "../../services/api"
+import { validatePassword } from '../../utils/validatePassword';
+import { validateCPF } from '../../utils/validateCPF';
+import { formatCPF } from '../../utils/validateCPF';
 
 const logoImobiliare = 'https://placehold.co/300x80/ffffff/333333?text=IMOBILIARE';
 
@@ -23,6 +26,11 @@ const RegisterCard: React.FC = () => {
         state: '',
     });
 
+    const [formErrors, setFormErrors] = useState({
+        password: '',
+        confirmPassword: '',
+        cpf: ''
+    });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { id, value } = e.target;
@@ -30,6 +38,28 @@ const RegisterCard: React.FC = () => {
             ...prevState,
             [id]: value,
         }));
+
+        if (id === 'password') {
+            const error = validatePassword(value);
+            setFormErrors(prevErrors => ({
+                ...prevErrors,
+                password: error,
+            }));
+        }
+        else if(id === "cpf"){
+            const error = validateCPF(value);
+            setFormErrors(prevErrors => ({
+                ...prevErrors,
+                cpf: error,
+            }));
+            var cpf_formatted = formatCPF(value);
+            setFormData(prevState => ({
+                ...prevState,
+                ["cpf"]: cpf_formatted,
+            }));
+
+
+        }
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -39,8 +69,8 @@ const RegisterCard: React.FC = () => {
             alert('As senhas não coincidem!');
             return;
         }
+
         try {
-            // 2. Preparar os dados para enviar (excluir confirmPassword)
             const { confirmPassword, ...dataToSend } = formData;
             const response = await api.post('/api/register', dataToSend);
 
@@ -80,8 +110,15 @@ const RegisterCard: React.FC = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                          <div>
                             <label htmlFor="cpf" className="block text-sm font-medium text-gray-700 mb-1">CPF</label>
-                            <input id="cpf" type="text" placeholder="000.000.000-00" value={formData.cpf} onChange={handleChange} required className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
-                        </div>
+                            <input id="cpf" type="text" placeholder="000.000.000-00" value={formData.cpf} onChange={handleChange} required 
+                            className={`w-full p-3 border rounded-lg shadow-sm ${
+                                    formErrors.cpf ? 'border-red-500' : 'border-gray-300'
+                                }`}
+                            />
+                            {formErrors.cpf && (
+                                <p className="text-red-500 text-xs mt-1">{formErrors.cpf}</p>
+                            )}
+                            </div>
                         <div>
                             <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">Telefone</label>
                             <input id="phone" type="tel" placeholder="(00) 90000-0000" value={formData.phone} onChange={handleChange} required className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
@@ -97,8 +134,23 @@ const RegisterCard: React.FC = () => {
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">Senha</label>
-                            <input id="password" type="password" placeholder="Crie uma senha forte" value={formData.password} onChange={handleChange} required className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
+                                Senha
+                            </label>
+                            <input
+                                type="password"
+                                id="password"
+                                name="password" 
+                                value={formData.password}
+                                onChange={handleChange}
+                                placeholder="Crie sua senha"
+                                className={`w-full p-3 border rounded-lg shadow-sm ${
+                                    formErrors.password ? 'border-red-500' : 'border-gray-300'
+                                }`}
+                            />
+                            {formErrors.password && (
+                                <p className="text-red-500 text-xs mt-1">{formErrors.password}</p>
+                            )}
                         </div>
                         <div>
                             <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">Confirmar Senha</label>
