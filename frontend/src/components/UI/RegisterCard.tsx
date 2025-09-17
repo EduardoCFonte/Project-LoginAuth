@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { Link , useNavigate} from 'react-router-dom';
 import api from "../../services/api"
-import { validatePassword } from '../../utils/validatePassword';
-import { validateCPF } from '../../utils/validateCPF';
-import { formatCPF } from '../../utils/validateCPF';
+import { validatePassword , validateEmail, validateCPF, formatCPF} from '../../utils/validators';
 
 const logoImobiliare = 'https://placehold.co/300x80/ffffff/333333?text=IMOBILIARE';
 
@@ -29,7 +27,8 @@ const RegisterCard: React.FC = () => {
     const [formErrors, setFormErrors] = useState({
         password: '',
         confirmPassword: '',
-        cpf: ''
+        cpf: '',
+        cep: '',
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,8 +56,13 @@ const RegisterCard: React.FC = () => {
                 ...prevState,
                 ["cpf"]: cpf_formatted,
             }));
-
-
+        }
+        else if( id === "email"){
+            const error = validateEmail(value)
+            setFormErrors(prevErrors => ({
+                ...prevErrors,
+                password: error,
+            }));
         }
     };
 
