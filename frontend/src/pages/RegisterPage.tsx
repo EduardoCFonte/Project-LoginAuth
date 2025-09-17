@@ -1,5 +1,5 @@
 import React from 'react';
-import RegisterCard from "../components/RegisterCard";
+import RegisterCard from "../components/UI/RegisterCard";
 import BackgroundImageLogin from "../assets/FundoLogin.jpeg"
 
 
