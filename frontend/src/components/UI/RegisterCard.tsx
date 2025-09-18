@@ -2,11 +2,14 @@ import React, { useState } from 'react';
 import { Link , useNavigate} from 'react-router-dom';
 import api from "../../services/api"
 import { validatePassword , validateEmail, validateCPF, formatCPF} from '../../utils/validators';
+import { useCep } from '../../hooks/useCEP';
 
 const logoImobiliare = 'https://placehold.co/300x80/ffffff/333333?text=IMOBILIARE';
 
 const RegisterCard: React.FC = () => {
     const navigate = useNavigate(); 
+    const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
@@ -64,7 +67,7 @@ const RegisterCard: React.FC = () => {
                 password: error,
             }));
         }
-    };
+    }
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -88,6 +91,9 @@ const RegisterCard: React.FC = () => {
             alert('Não foi possível completar o registo. Verifique os dados e tente novamente.');
         }
     };
+
+
+    formErrors.cep = useCep(formData.cep, setFormData);
 
     return (
         <div className="bg-white w-full max-w-2xl p-8 md:p-10 rounded-2xl shadow-xl my-8 max-h-[90vh] overflow-y-auto">
@@ -137,12 +143,12 @@ const RegisterCard: React.FC = () => {
                         <input id="email" type="email" placeholder="seu.email@exemplo.com" value={formData.email} onChange={handleChange} required className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
+                        <div className="relative">
                             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
                                 Senha
                             </label>
                             <input
-                                type="password"
+                                type={showPassword ? "text" : "password"} 
                                 id="password"
                                 name="password" 
                                 value={formData.password}
@@ -155,10 +161,42 @@ const RegisterCard: React.FC = () => {
                             {formErrors.password && (
                                 <p className="text-red-500 text-xs mt-1">{formErrors.password}</p>
                             )}
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 mt-6"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                                    {showPassword ? (
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.23 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.243 4.243l-4.243-4.243" />
+                                    ) : (
+                                        <>
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.432 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        </>
+                                    )}
+                                </svg>
+                            </button>
                         </div>
-                        <div>
+                        <div className="relative">
                             <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">Confirmar Senha</label>
-                            <input id="confirmPassword" type="password" placeholder="Repita a senha" value={formData.confirmPassword} onChange={handleChange} required className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                            <input id="confirmPassword" type={showPassword ? "text" : "password"}  placeholder="Repita a senha" value={formData.confirmPassword} onChange={handleChange} required className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 mt-6"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                                    {showPassword ? (
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.23 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.243 4.243l-4.243-4.243" />
+                                    ) : (
+                                        <>
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.432 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        </>
+                                    )}
+                                </svg>
+                            </button>        
                         </div>
                     </div>
                 </fieldset>
@@ -169,6 +207,7 @@ const RegisterCard: React.FC = () => {
                     <div>
                         <label htmlFor="cep" className="block text-sm font-medium text-gray-700 mb-1">CEP</label>
                         <input id="cep" type="text" placeholder="00000-000" value={formData.cep} onChange={handleChange} required className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                        {formErrors.cep&& <p className="text-red-500">{formErrors.cep}</p>}            
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div className="md:col-span-2">
