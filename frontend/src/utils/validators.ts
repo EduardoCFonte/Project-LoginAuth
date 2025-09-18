@@ -34,3 +34,20 @@ export const validateCPF = (value: string) :string => {
 export const formatCPF = (value:string) :string => {
     return cpf.format(value)
 }
+
+export const validateCEPFormat = (cep: string): string => {
+  if (!cep) {
+    return "O CEP é obrigatório.";
+  }
+  
+  // Remove caracteres não numéricos para a validação
+  const cepNumerico = cep.replace(/\D/g, '');
+
+  // A RegEx /^(\d{8})$/ verifica se a string contém exatamente 8 dígitos.
+  if (!/^\d{8}$/.test(cepNumerico)) {
+    return "O formato do CEP é inválido. Deve conter 8 dígitos.";
+  }
+
+  return ""; // Formato válido
+};
+
