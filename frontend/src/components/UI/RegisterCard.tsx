@@ -32,6 +32,7 @@ const RegisterCard: React.FC = () => {
         confirmPassword: '',
         cpf: '',
         cep: '',
+        email: ''
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -64,7 +65,7 @@ const RegisterCard: React.FC = () => {
             const error = validateEmail(value)
             setFormErrors(prevErrors => ({
                 ...prevErrors,
-                password: error,
+                email: error,
             }));
         }
     }
@@ -141,6 +142,9 @@ const RegisterCard: React.FC = () => {
                     <div>
                         <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email</label>
                         <input id="email" type="email" placeholder="seu.email@exemplo.com" value={formData.email} onChange={handleChange} required className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                        {formErrors.email && (
+                                <p className="text-red-500 text-xs mt-1">{formErrors.email}</p>
+                            )}    
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="relative">
@@ -164,7 +168,7 @@ const RegisterCard: React.FC = () => {
                             <button
                                 type="button"
                                 onClick={() => setShowPassword(!showPassword)}
-                                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 mt-6"
+                                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 "
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                                     {showPassword ? (
@@ -184,7 +188,7 @@ const RegisterCard: React.FC = () => {
                             <button
                                 type="button"
                                 onClick={() => setShowPassword(!showPassword)}
-                                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 mt-6"
+                                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 "
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                                     {showPassword ? (
