@@ -2,8 +2,8 @@ from fastapi import FastAPI, HTTPException, Depends
 from typing import Annotated
 from sqlalchemy.orm import Session
 from pydantic import BaseModel, EmailStr
-from database import SessionLocal, engine
-import models
+from core.database import SessionLocal, engine
+from models.User import User
 from fastapi.middleware.cors import CORSMiddleware 
 from datetime import datetime
 
