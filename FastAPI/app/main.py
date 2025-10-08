@@ -2,11 +2,11 @@ from fastapi import FastAPI, HTTPException, Depends
 from typing import Annotated
 from sqlalchemy.orm import Session
 from pydantic import BaseModel, EmailStr
-from core.database import SessionLocal, engine
-import models
+from .core.database import SessionLocal, engine
+from . import models
 from fastapi.middleware.cors import CORSMiddleware 
 from datetime import datetime
-from api.v1.router import router as api_v1_router
+from .api.v1.router import router as api_v1_router
 
 class UserCreate(BaseModel):
     firstName: str
@@ -38,10 +38,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Inclui todas as rotas da v1 sob o prefixo /api/v1
 app.include_router(api_v1_router, prefix="/api/v1")
 
-# Uma rota simples na raiz, só para saber que a API está no ar
 @app.get("/")
 def read_root():
     return {"status": "Imobiliare API is running!"}

@@ -1,15 +1,13 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-import schemas
-import services
-import models
-from core.database import get_db
+from app import schemas, services, models
+from app.core.database import get_db
 
 
 router = APIRouter()
 
 @router.post("/register", response_model=schemas.UserRegister)
-def register_user(user_data: schemas.UserCreate, db: Session = Depends(get_db)):
+def register_user(user_data: schemas.UserRegister, db: Session = Depends(get_db)):
     """
     Endpoint para registrar um novo usuário.
     """
