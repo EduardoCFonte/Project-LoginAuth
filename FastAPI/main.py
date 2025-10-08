@@ -3,9 +3,10 @@ from typing import Annotated
 from sqlalchemy.orm import Session
 from pydantic import BaseModel, EmailStr
 from core.database import SessionLocal, engine
-from models.User import User
+import models
 from fastapi.middleware.cors import CORSMiddleware 
 from datetime import datetime
+from api.v1.router import router as api_v1_router
 
 class UserCreate(BaseModel):
     firstName: str
@@ -37,6 +38,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Inclui todas as rotas da v1 sob o prefixo /api/v1
+app.include_router(api_v1_router, prefix="/api/v1")
+
+# Uma rota simples na raiz, só para saber que a API está no ar
+@app.get("/")
+def read_root():
+    return {"status": "Imobiliare API is running!"}
 
 def get_db():
     db = SessionLocal()
@@ -59,16 +67,18 @@ async def register_user(user_data: UserCreate, db: Session = Depends(get_db)):
     db_user = db.query(models.User).filter(models.User.email == user_data.email).first()
     if db_user:
         raise HTTPException(status_code=400, detail="Email já registado")
+    db_user_cpf_check = db.query(models.User).filter(models.User.cpf == user_data.cpf).first()
+    if db_user_cpf_check:
+        raise HTTPException(status_code=400, detail="CPF já registado")
 
-    # 2. Criar o novo objeto de utilizador para a base de dados
-    #    (Numa app real, aqui você faria o HASH da senha antes de guardar!)
+
     new_user = models.User(
         firstName=user_data.firstName,
         lastName=user_data.lastName,
         cpf=user_data.cpf,
         phone=user_data.phone,
         email=user_data.email,
-        hashed_password=f"hashed_{user_data.password}", # Apenas um exemplo!
+        hashed_password=f"hashed_{user_data.password}", 
         cep=user_data.cep,
         street=user_data.street,
         number=user_data.number,
