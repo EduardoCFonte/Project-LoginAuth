@@ -3,6 +3,7 @@ import { Link , useNavigate} from 'react-router-dom';
 import api from "../../services/api"
 import { validatePassword , validateEmail, validateCPF, formatCPF} from '../../utils/validators';
 import { useCep } from '../../hooks/useCEP';
+import axios from "axios"
 
 const logoImobiliare = 'https://placehold.co/300x80/ffffff/333333?text=IMOBILIARE';
 
@@ -80,18 +81,30 @@ const RegisterCard: React.FC = () => {
 
         try {
             const { confirmPassword, ...dataToSend } = formData;
-            const response = await api.post('/api/register', dataToSend);
+            const response = await api.post('/api/v1/register', dataToSend);
+            console.log(response)
 
-
-            alert(response.data.message); // O axios já formata a resposta para JSON
+            alert("Usuário criado com sucesso"); 
             navigate('/login');
 
         } catch (error) {
-            // O Axios ajuda a tratar erros de forma mais consistente
-            console.error('Erro de registo:', error);
-            alert('Não foi possível completar o registo. Verifique os dados e tente novamente.');
-        }
-    };
+            if (axios.isAxiosError(error)) {
+
+                if (error.response && error.response.data && error.response.data.detail) {
+                    const errorMessage = error.response.data.detail;
+                    console.error('Erro de registo:', errorMessage);
+                    alert(errorMessage);
+                } else {
+                    console.error('Erro do servidor:', error.message);
+                    alert('Ocorreu um erro no servidor. Tente novamente.');
+                }
+
+            } else {
+                console.error('Erro inesperado:', error);
+                alert('Não foi possível completar o registo. Verifique a sua conexão e tente novamente.');
+    }
+    }
+};
 
 
     formErrors.cep = useCep(formData.cep, setFormData);
@@ -258,4 +271,4 @@ const RegisterCard: React.FC = () => {
     );
 };
 
-export default RegisterCard;
+export default RegisterCard
