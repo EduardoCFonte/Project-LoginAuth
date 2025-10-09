@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import api from '../../services/api';
 
-// --- Ícones (SVG embutido para não precisar de bibliotecas externas) ---
-
-// Ícone do Google
 const GoogleIcon: React.FC = () => (
   <svg className="w-5 h-5 mr-3" viewBox="0 0 48 48">
     <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"></path>
@@ -13,19 +11,24 @@ const GoogleIcon: React.FC = () => (
   </svg>
 );
 
-// --- Componente Principal ---
-
-// Placeholder para a sua imagem de logo
 const logoImobiliare = 'https://placehold.co/300x80/ffffff/333333?text=IMOBILIARE';
 
 const LoginCard: React.FC = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+    const [login, setLogin] = useState({
+      email: "",
+      password: ""  
+    })
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        alert(`A tentar login com: \nEmail: ${email}\nSenha: ${password}`);
+        alert(`A tentar login com: \nEmail: ${login.email}\nSenha: ${login.password}`);
+        setLogin
+
+        try{
+            const response = api.post("/login", login)
+        }
+        catch{}
     };
     
     const handleGoogleLogin = () => {
@@ -54,8 +57,10 @@ const LoginCard: React.FC = () => {
                             id="email"
                             type="email" 
                             placeholder="seu.email@exemplo.com"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            value={login.email}
+                            onChange={(e) =>
+                                setLogin({ ...login, email: e.target.value })
+                            }
                             required
                             className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-200"
                         />
@@ -75,8 +80,10 @@ const LoginCard: React.FC = () => {
                                 id="password"
                                 type={showPassword ? "text" : "password"} 
                                 placeholder="Digite sua senha"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
+                                value={login.password}
+                                onChange={(e) =>
+                                    setLogin({ ...login, password: e.target.value })
+                                }
                                 required
                                 className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-200"
                             />
@@ -99,8 +106,6 @@ const LoginCard: React.FC = () => {
                             </button>
                         </div>
                     </div>
-
-                    {/* Botão de Entrar */}
                     <button 
                         type="submit"
                         className="w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-300 transition-all duration-300 ease-in-out"
@@ -108,15 +113,11 @@ const LoginCard: React.FC = () => {
                         Entrar
                     </button>
                 </form>
-
-                {/* Divisor "ou" */}
                 <div className="my-6 flex items-center">
                     <div className="flex-grow border-t border-gray-300"></div>
                     <span className="flex-shrink mx-4 text-gray-500 text-sm">ou</span>
                     <div className="flex-grow border-t border-gray-300"></div>
                 </div>
-
-                {/* Botão de Login com Google */}
                 <button 
                     onClick={handleGoogleLogin}
                     className="w-full flex items-center justify-center bg-white border border-gray-300 text-gray-700 font-semibold py-3 px-4 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-gray-200 transition-all duration-300 ease-in-out"

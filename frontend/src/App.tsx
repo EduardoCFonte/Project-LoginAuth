@@ -7,9 +7,7 @@ import RegisterPage from "./pages/RegisterPage"
 const App = () => {
   return (
 <div className="flex flex-col h-screen">
-      {/* Header rendered outside routes*/}
       <Header />
-
       <main className="flex-grow">
         <Routes>
           <Route path="/" element={<Navigate to="/login" />} />
