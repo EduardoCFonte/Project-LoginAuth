@@ -10,7 +10,7 @@ class User(Base):
     cpf = Column(String, unique=True, index=True)
     phone = Column(String)
     email = Column(String, unique=True, index=True)
-    hashed_password = Column(String) 
+    password = Column(String) 
     cep = Column(String)
     street = Column(String)
     number = Column(String)
