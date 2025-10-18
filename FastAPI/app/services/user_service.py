@@ -1,11 +1,9 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from .. import models, schemas 
-# No futuro, importaremos a função de hash de senha daqui
-# from ..core.security import get_password_hash 
 from ..core.password_security import get_password_hash
 
-def create_user(db: Session, user_data: schemas.UserRegister) -> models.User:
+def create_user(db: Session, user_data: schemas.user_register) -> models.User:
     """
     Cria um novo usuário no banco de dados.
     """
