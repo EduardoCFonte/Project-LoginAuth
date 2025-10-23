@@ -5,7 +5,7 @@ from app.core.database import get_db
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from datetime import timedelta
 from app.core.load_env import settings
-from app.core.password_security import create_token
+from app.core.security import create_token
 
 router = APIRouter()
 
@@ -14,7 +14,6 @@ def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db:
     """
     Endpoint de login. Recebe email e senha e retorna um token de acesso.
     """
-    print(form_data)
     user = services.login.authenticate_user(db, form_data)
 
     if not user:
@@ -28,5 +27,4 @@ def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db:
     access_token = create_token(
         data={"sub": user.email}, expires_delta=access_token_expires
     )
-
     return {"access_token": access_token, "token_type": "bearer"}
