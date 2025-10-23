@@ -35,8 +35,9 @@ const LoginCard: React.FC = () => {
             const response = await api.post("/api/v1/login", params)
             console.log(response)
             if (response.data.access_token) {
+                console.log(response.data)
                 login(response.data.access_token);
-                navigate('/register'); 
+                navigate('/main'); 
             }
             return response.data;
         }
