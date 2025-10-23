@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
-from fastapi import HTTPException
+from fastapi import HTTPException, Depends
 from .. import models, schemas 
-from ..core.password_security import get_password_hash
+from ..core.security import get_password_hash
 
 def create_user(db: Session, user_data: schemas.user_register) -> models.User:
     """
@@ -37,3 +37,7 @@ def create_user(db: Session, user_data: schemas.user_register) -> models.User:
     db.refresh(new_user)
 
     return new_user
+
+def get_user_by_email(db: Session, email: str) -> models.User | None:
+    """Busca um utilizador pelo seu endereço de email."""
+    return db.query(models.User).filter(models.User.email == email).first()
