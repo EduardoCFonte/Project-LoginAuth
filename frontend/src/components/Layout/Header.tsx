@@ -43,8 +43,6 @@ const Header: React.FC = () => {
             />
         </button>
         </div>
-
-        {/* Lado Direito: Perfil do Utilizador */}
         <div className="flex-1 flex justify-end items-center space-x-3">
         {token ? <span className="hidden sm:inline font-medium text-slate-700">
           Olá {user?.firstName}
