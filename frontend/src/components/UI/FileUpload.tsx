@@ -1,22 +1,31 @@
 import React, { useState, useCallback } from 'react';
 import { useDropzone, FileRejection } from 'react-dropzone';
 import { DocumentArrowUpIcon, XCircleIcon, TrashIcon } from '@heroicons/react/24/solid';
+import api from '../../services/api';
 
 interface UploadedFile extends File {
-  preview?: string; // Para pré-visualizações de imagem, embora não seja usado para PDF
+  preview?: string; 
 }
 
 const FileUpload: React.FC = () => {
-  // Estado para guardar os ficheiros que o utilizador largou
+
   const [acceptedFiles, setAcceptedFiles] = useState<UploadedFile[]>([]);
   const [fileRejections, setFileRejections] = useState<FileRejection[]>([]);
 
   const onDrop = useCallback((accepted: File[], rejections: FileRejection[]) => {
-    setAcceptedFiles(accepted.map(file => Object.assign(file, {
-      preview: URL.createObjectURL(file) 
-    })));
-    setFileRejections(rejections);
-  }, []);
+    const newFilesWithPreview = accepted.map(file => Object.assign(file, {
+        preview: URL.createObjectURL(file)
+      }));
+  
+      setAcceptedFiles(prevFiles => [
+        ...prevFiles,       
+        ...newFilesWithPreview 
+      ]);
+      setFileRejections(prevRejections => [
+        ...prevRejections,      
+        ...rejections 
+      ]);
+    }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -34,23 +43,14 @@ const FileUpload: React.FC = () => {
 
     const formData = new FormData();
     acceptedFiles.forEach(file => {
-      formData.append('files', file); // 'files' deve ser o nome que o seu backend espera
+      formData.append('files', file); 
     });
-
+    console.log(acceptedFiles)
     try {
-      // Exemplo de como você enviaria para um endpoint no seu backend
-      // const response = await api.post('/api/v1/upload-documents', formData, {
-      //   headers: {
-      //     'Content-Type': 'multipart/form-data',
-      //     'Authorization': `Bearer ${seu_token_aqui}` // Se a rota for protegida
-      //   }
-      // });
-      
-      // Linha de simulação:
+      const response = await api.post("/api/v1/upload-documents", formData)
+
       console.log("Enviando ficheiros:", acceptedFiles);
       alert("Ficheiros enviados com sucesso! (Simulação)");
-      
-      // Limpa os ficheiros após o envio
       setAcceptedFiles([]);
       setFileRejections([]);
 
@@ -69,8 +69,7 @@ const FileUpload: React.FC = () => {
     console.log(file);
     return (
         <li key={file.name} className="text-sm text-green-700 list-disc ml-4">
-             {/* Nome e tamanho do ficheiro */}
-      <span className='flex-1 truncate' title={file.name}> {/* truncate evita que nomes longos quebrem o layout */}
+      <span className='flex-1 truncate' title={file.name}> 
         {file.name} - {(file.size / 1024).toFixed(2)} KB
       </span>
       
@@ -78,7 +77,7 @@ const FileUpload: React.FC = () => {
         type="button" 
         onClick={() => handleExclusion(file)} 
         className="ml-4 p-1 rounded-full text-red-500 hover:bg-red-100 hover:text-red-700 transition-colors justify-content:flex-end"
-        aria-label={`Remover ${file.name}`} // Importante para acessibilidade
+        aria-label={`Remover ${file.name}`} 
       >
         <TrashIcon className="w-5 h-5" />
       </button>
