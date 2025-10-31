@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status, UploadFile,File, Request
 from sqlalchemy.orm import Session
-from app import schemas, services, models
+from app import schemas, services, models, parser
 from app.core.database import get_db
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from datetime import timedelta
@@ -19,5 +19,6 @@ async def parse_documents(files: list[UploadFile] = File(...), request: Request 
     print(request.headers)
     print("---------------------------------")
     print(files)
-    # parser.process(form_data)
+    parser_instance = parser.pdf_parser()
+    textos_dos_pdfs = await parser_instance.read_pdf(files)
     return {"access_token": "poooo", "token_type": "bearer"}
