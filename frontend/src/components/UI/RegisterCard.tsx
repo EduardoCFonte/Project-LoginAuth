@@ -4,13 +4,14 @@ import api from "../../services/api"
 import { validatePassword , validateEmail, validateCPF, formatCPF} from '../../utils/validators';
 import { useCep } from '../../hooks/useCEP';
 import axios from "axios"
+import ImageUpload from './ImageUpload';
 
 const logoImobiliare = 'https://placehold.co/300x80/ffffff/333333?text=IMOBILIARE';
 
 const RegisterCard: React.FC = () => {
     const navigate = useNavigate(); 
     const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
-    const [showPassword, setShowPassword] = useState(false);
+    const [showPassword, setShowPassword] = useState(false); 
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
@@ -35,6 +36,8 @@ const RegisterCard: React.FC = () => {
         cep: '',
         email: ''
     });
+
+    formErrors.cep = useCep(formData.cep, setFormData);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { id, value } = e.target;
@@ -106,8 +109,6 @@ const RegisterCard: React.FC = () => {
     }
 };
 
-
-    formErrors.cep = useCep(formData.cep, setFormData);
 
     return (
         <div className="bg-white w-full max-w-2xl p-8 md:p-10 rounded-2xl shadow-xl my-8 max-h-[90vh] overflow-y-auto">
@@ -254,6 +255,7 @@ const RegisterCard: React.FC = () => {
                             <input id="state" type="text" placeholder="UF" value={formData.state} onChange={handleChange} required maxLength={2} className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
                         </div>
                     </div>
+                    {/* <ImageUpload/> */}
                 </fieldset>
                 
                 <button type="submit" className="w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-300 !mt-8">
